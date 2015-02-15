@@ -1,0 +1,335 @@
+package com.example.tests;
+
+import java.util.regex.Pattern;
+import java.util.concurrent.TimeUnit;
+import org.junit.*;
+import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
+import org.openqa.selenium.*;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.Select;
+
+public class VitaminsSupplements {
+  private WebDriver driver;
+  private String baseUrl;
+  private boolean acceptNextAlert = true;
+  private StringBuffer verificationErrors = new StringBuffer();
+
+  @Before
+  public void setUp() throws Exception {
+    driver = new FirefoxDriver();
+    baseUrl = "http://change-this-to-the-site-you-are-testing/";
+    driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+  }
+
+  @Test
+  public void testVitaminsSupplements() throws Exception {
+    driver.get(baseUrl + "/patients");
+    new Select(driver.findElement(By.id("select-patient"))).selectByVisibleText("William");
+    assertEquals("William", driver.findElement(By.linkText("William")).getText());
+    driver.findElement(By.xpath("(//a[contains(text(),'Vitamins & Supplements')])[2]")).click();
+    try {
+      assertEquals("", driver.findElement(By.cssSelector("img[alt=\"Add\"]")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    try {
+      assertEquals("Vitamins & Supplements", driver.findElement(By.cssSelector("h2")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    try {
+      assertEquals("", driver.findElement(By.cssSelector("img[alt=\"Download\"]")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    try {
+      assertEquals("name", driver.findElement(By.cssSelector(".heading:nth(0)")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    try {
+      assertEquals("frequency", driver.findElement(By.cssSelector(".heading:nth(1)")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    try {
+      assertEquals("purpose", driver.findElement(By.cssSelector(".heading:nth(2)")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    try {
+      assertEquals("note", driver.findElement(By.cssSelector(".heading:nth(3)")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    try {
+      assertEquals("actions", driver.findElement(By.cssSelector(".heading:nth(4)")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    // removing old vitamins & supplements
+    Number count = driver.findElements(By.cssSelector(".icon-remove")).size();
+    System.out.println(count);
+    // ERROR: Caught exception [unknown command [while]]
+    driver.findElement(By.cssSelector(".icon-remove")).click();
+    assertTrue(Pattern.compile("Are you sure you want to delete*").matcher(closeAlertAndGetItsText()).find());
+    driver.findElement(By.cssSelector("button.close")).click();
+    // ERROR: Caught exception [ERROR: Unsupported command [getEval |  | ]]
+    // ERROR: Caught exception [unknown command [endWhile]]
+    // end of removal
+    driver.findElement(By.cssSelector("img[alt=\"Add\"]")).click();
+    for (int second = 0;; second++) {
+    	if (second >= 60) fail("timeout");
+    	try { if (driver.findElement(By.cssSelector("#modal_new_vitamin_form")).isDisplayed()) break; } catch (Exception e) {}
+    	Thread.sleep(1000);
+    }
+
+    for (int second = 0;; second++) {
+    	if (second >= 60) fail("timeout");
+    	try { if (driver.findElement(By.cssSelector(".modal-content:nth(1)")).isDisplayed()) break; } catch (Exception e) {}
+    	Thread.sleep(1000);
+    }
+
+    try {
+      assertEquals("Vitamins & supplements", driver.findElement(By.cssSelector(".modal-header>h2:nth(1)")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    try {
+      assertTrue(driver.findElement(By.cssSelector(".control-label.col-sm-4.col-md-3:nth(0)")).getText().matches("^exact:[\\s\\S]* Vitamin name$"));
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    try {
+      assertEquals("Frequency", driver.findElement(By.cssSelector(".control-label.col-sm-4.col-md-3:nth(1)")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    try {
+      assertEquals("Purpose", driver.findElement(By.cssSelector(".control-label.col-sm-4.col-md-3:nth(2)")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    try {
+      assertEquals("Note", driver.findElement(By.cssSelector(".control-label.col-sm-4.col-md-3:nth(3)")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    try {
+      assertEquals("Save", driver.findElement(By.cssSelector("a.btn-next > span")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    try {
+      assertEquals("", driver.findElement(By.cssSelector("img[alt=\"Vitamin preview default\"]")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    try {
+      assertEquals("×", driver.findElement(By.linkText("×")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    try {
+      assertEquals("Add image", driver.findElement(By.cssSelector("span:contains(Add image)")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    try {
+      assertEquals("", driver.findElement(By.cssSelector("#vitamin_note")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    driver.findElement(By.cssSelector("#vitamin_name")).clear();
+    driver.findElement(By.cssSelector("#vitamin_name")).sendKeys("Vitamin c");
+    driver.findElement(By.cssSelector("#vitamin_frequency")).clear();
+    driver.findElement(By.cssSelector("#vitamin_frequency")).sendKeys("once a day");
+    driver.findElement(By.cssSelector("#vitamin_purpose")).clear();
+    driver.findElement(By.cssSelector("#vitamin_purpose")).sendKeys("vitamin c level is low");
+    driver.findElement(By.cssSelector("a.btn-next > span")).click();
+    try {
+      assertEquals("×Vitamin was successfully created.", driver.findElement(By.cssSelector(".alert.fade.in.alert-success.alert-dismissable")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    driver.findElement(By.cssSelector("button.close")).click();
+    try {
+      assertTrue(isElementPresent(By.cssSelector(".attachment_thumb")));
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    try {
+      assertEquals("Vitamin c", driver.findElement(By.cssSelector("div.text-holder")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    try {
+      assertEquals("once a day", driver.findElement(By.cssSelector(".col-xs-2.frequency_col:nth(1)")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    try {
+      assertEquals("vitamin c level is low", driver.findElement(By.cssSelector(".col-xs-2.purpose_col:nth(1)")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    try {
+      assertEquals("", driver.findElement(By.cssSelector("i.icon-pencil")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    try {
+      assertEquals("", driver.findElement(By.cssSelector("i.icon-remove")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    driver.findElement(By.cssSelector("i.icon-pencil")).click();
+    for (int second = 0;; second++) {
+    	if (second >= 60) fail("timeout");
+    	try { if (driver.findElement(By.cssSelector("#vitamin_name")).isDisplayed()) break; } catch (Exception e) {}
+    	Thread.sleep(1000);
+    }
+
+    driver.findElement(By.cssSelector("#vitamin_name")).clear();
+    driver.findElement(By.cssSelector("#vitamin_name")).sendKeys("Vitamin d");
+    driver.findElement(By.cssSelector("#vitamin_purpose")).clear();
+    driver.findElement(By.cssSelector("#vitamin_purpose")).sendKeys("vitamin d level is low");
+    driver.findElement(By.cssSelector("#vitamin_note")).clear();
+    driver.findElement(By.cssSelector("#vitamin_note")).sendKeys("There is deficiency of vitamin d and not vitamin c.");
+    try {
+      assertEquals("Frequency", driver.findElement(By.cssSelector("label.control-label.col-sm-4.col-md-3:contains(Frequency)")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    try {
+      assertEquals("Purpose", driver.findElement(By.cssSelector("label.control-label.col-sm-4.col-md-3:contains(Purpose)")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    try {
+      assertEquals("Note", driver.findElement(By.cssSelector("label.control-label.col-sm-4.col-md-3:contains(Note)")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    try {
+      assertEquals("Save", driver.findElement(By.cssSelector("a.btn-next > span")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    try {
+      assertEquals("", driver.findElement(By.cssSelector("img[alt=\"Vitamin preview default\"]")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    try {
+      assertEquals("×", driver.findElement(By.linkText("×")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    try {
+      assertEquals("", driver.findElement(By.id("vitamin_note")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    try {
+      assertEquals("Change image", driver.findElement(By.cssSelector("span:contains(Change image)")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    driver.findElement(By.cssSelector("a.btn-next > span")).click();
+    for (int second = 0;; second++) {
+    	if (second >= 60) fail("timeout");
+    	try { if (isElementPresent(By.cssSelector(".alert.fade.in.alert-success.alert-dismissable"))) break; } catch (Exception e) {}
+    	Thread.sleep(1000);
+    }
+
+    try {
+      assertEquals("×Vitamin was successfully updated.", driver.findElement(By.cssSelector(".alert.fade.in.alert-success.alert-dismissable")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    driver.findElement(By.cssSelector("button.close")).click();
+    try {
+      assertTrue(isElementPresent(By.cssSelector(".attachment_thumb")));
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    try {
+      assertEquals("Vitamin d", driver.findElement(By.cssSelector("div.text-holder")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    try {
+      assertEquals("once a day", driver.findElement(By.cssSelector(".col-xs-2.frequency_col:nth(1)")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    try {
+      assertEquals("vitamin d level is low", driver.findElement(By.cssSelector(".col-xs-2.purpose_col:nth(1)")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    try {
+      assertEquals("There is deficiency of vitamin d and not vitamin c.", driver.findElement(By.cssSelector(".col-xs-4.note_col:nth(1)")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    driver.findElement(By.cssSelector("i.icon-remove")).click();
+    assertTrue(closeAlertAndGetItsText().matches("^Are you sure you want to delete Vitamin d[\\s\\S]$"));
+    for (int second = 0;; second++) {
+    	if (second >= 60) fail("timeout");
+    	try { if (isElementPresent(By.cssSelector(".alert.fade.in.alert-success.alert-dismissable"))) break; } catch (Exception e) {}
+    	Thread.sleep(1000);
+    }
+
+    try {
+      assertEquals("×Vitamin was successfully destroyed.", driver.findElement(By.cssSelector(".alert.fade.in.alert-success.alert-dismissable")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    driver.findElement(By.cssSelector("button.close")).click();
+  }
+
+  @After
+  public void tearDown() throws Exception {
+    driver.quit();
+    String verificationErrorString = verificationErrors.toString();
+    if (!"".equals(verificationErrorString)) {
+      fail(verificationErrorString);
+    }
+  }
+
+  private boolean isElementPresent(By by) {
+    try {
+      driver.findElement(by);
+      return true;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
+  }
+
+  private boolean isAlertPresent() {
+    try {
+      driver.switchTo().alert();
+      return true;
+    } catch (NoAlertPresentException e) {
+      return false;
+    }
+  }
+
+  private String closeAlertAndGetItsText() {
+    try {
+      Alert alert = driver.switchTo().alert();
+      String alertText = alert.getText();
+      if (acceptNextAlert) {
+        alert.accept();
+      } else {
+        alert.dismiss();
+      }
+      return alertText;
+    } finally {
+      acceptNextAlert = true;
+    }
+  }
+}
